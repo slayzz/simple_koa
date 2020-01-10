@@ -6,7 +6,7 @@
 ## Install
 1. `Run npm install`
 2. `docker-compose up`
-3. `npm run migate \-- up` (To fill database)
+3. `npm run migate -- up` (To fill database)
 4.  `node app.js`
 
 # Features

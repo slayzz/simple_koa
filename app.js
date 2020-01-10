@@ -13,6 +13,6 @@ app.context.db = new MysqlDB({ host: 'localhost', database: 'db', user: 'user', 
 app.use(koaBody());
 
 books.use('/books', booksRoutes.routes(), booksRoutes.allowedMethods());
-app.use(books.routes())
+app.use(books.routes());
 
 app.listen(3000);

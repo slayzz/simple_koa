@@ -1,18 +1,20 @@
 const cache = require('memory-cache');
+const EventEmitter = require('events');
+
+const cacheEventEmitter = new EventEmitter();
 
 const memCache = new cache.Cache();
 function cacheBooks(eventAdd, eventRemove) {
+    cacheEventEmitter.on(eventAdd, ({ data, key }) => {
+        memCache.put(key, data);
+    });
+
+    cacheEventEmitter.on(eventRemove, () => {
+        memCache.clear();
+    });
+
     return async (ctx, next) => {
         const key = ctx.originalUrl;
-
-        ctx.app.on(eventAdd, (data) => {
-            memCache.put(key, data);
-        });
-
-        ctx.app.on(eventRemove, () => {
-            memCache.clear();
-        });
-
         const cacheContent = memCache.get(key);
         if (cacheContent) {
             ctx.body = cacheContent;
@@ -23,5 +25,6 @@ function cacheBooks(eventAdd, eventRemove) {
 }
 
 module.exports = {
-    cacheBooks
+    cacheBooks,
+    cacheEventEmitter,
 };

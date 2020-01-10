@@ -4,7 +4,7 @@ const Router = require('koa-router');
 const validate = require('koa-joi-validate');
 
 const {createFilterQuery, createSortQuery, createInsertQuery, createUpdateQuery} = require('../lib/db/queryBuilder');
-const {cacheBooks} = require('../lib/cache');
+const {cacheBooks, cacheEventEmitter} = require('../lib/cache');
 
 const INSERT_SCHEMA = {
     title: joi.string(),
@@ -45,7 +45,8 @@ books.get('/', cacheBooks('addCache', 'removeAllCache'), async ctx => {
         sql = `${sql} LIMIT ${limit} OFFSET ${offset};`;
 
         const result = await ctx.db.query(sql);
-        ctx.app.emit('addCache', result);
+        const originalUrl = ctx.request.originalUrl;
+        cacheEventEmitter.emit('addCache', {data: result, key: originalUrl});
         ctx.body = result;
     } catch (err) {
         console.error(err);
@@ -58,7 +59,7 @@ books.post('/', bookInsertValidator, async ctx => {
         const newBook = ctx.request.body;
         const sql = `INSERT INTO ${TABLE} ${createInsertQuery(newBook)}`;
         await ctx.db.query(sql);
-        ctx.app.emit('removeAllCache');
+        cacheEventEmitter.emit('removeAllCache');
         ctx.body = 'success';
     } catch (err) {
         console.error(err);
@@ -89,7 +90,7 @@ books.put('/', bookUpdateValidator, async ctx => {
         await ctx.db.query(updateSql);
 
         const [updatedBook] = await ctx.db.query(searchBookQuery);
-        ctx.app.emit('removeAllCache');
+        cacheEventEmitter.emit('removeAllCache');
         ctx.body = updatedBook;
     } catch (err) {
         console.error(err);

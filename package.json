@@ -1,0 +1,31 @@
+{
+  "name": "test_work",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "db-migrate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "joi": "^14.3.1",
+    "koa": "^2.11.0",
+    "koa-body": "^4.1.1",
+    "koa-joi-validate": "^0.5.1",
+    "koa-route": "^3.2.0",
+    "koa-router": "^7.4.0",
+    "memory-cache": "^0.2.0",
+    "moment": "^2.24.0",
+    "mysql": "^2.17.1",
+    "qs": "^6.9.1"
+  },
+  "devDependencies": {
+    "db-migrate": "^0.11.6",
+    "db-migrate-mysql": "^2.1.0",
+    "eslint": "^6.8.0",
+    "faker": "^4.1.0"
+  }
+}
